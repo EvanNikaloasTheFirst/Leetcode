@@ -1,0 +1,70 @@
+#include <iostream>
+using namespace std;
+#include<string.h>
+#include <unordered_map>
+#include <vector>
+#include <map>
+#include <list>
+
+vector<int> partitionLabels(string s);
+
+int main(int argc, const char * argv[]) {
+    
+    string s = "ababcbacadefegdehijhklij";
+    
+        vector<int> result = partitionLabels(s);
+        for (int len : result) {
+            cout << len << " ";
+        }
+        cout << endl;
+        return 0;
+
+}
+
+vector<int> partitionLabels(string s) {
+    vector<int> result;
+    
+//    stores last occurance index of each char
+    unordered_map<char, int> last_occurrence;
+    
+//    checks for valid input
+    if (s.empty()){
+        return result;
+    }
+    
+//itterate over the string to find last occurance of each string
+//    stores the key (char[i]) with the last occuring value (int)
+    for (int i = 0; i < s.length(); i++) {
+        last_occurrence[s[i]] = i;
+    }
+    
+    
+//    for (auto& pair : last_occurrence) {
+//           cout << "Key: " << pair.first << ", Value: " << pair.second << endl;
+//       }
+    
+//    keeps track of the start and end of each string
+    int start = 0, end = 0;
+    
+    // Iterate through the string again
+    for (int i = 0; i < s.length(); i++) {
+
+//      declares the end by finding if end < last_occurrence[s[i] || end > last_occurrence[s[i]
+        end = max(end, last_occurrence[s[i]]);
+//      end is the last occuring index of s[i] in the string
+        
+//        i.e end  = 8 , 8 = last_occurrence[s[i]] for 'a'
+        if (i == end) {
+//            if (i == end) if true it reaches the end of one string
+            
+            result.push_back(end - start + 1);
+//            ^ this create a string from (lastoccurance[i]) which is 8
+//            and adds all strings from 8 - 0 (start) + 1 (as the start is included) -> ababcbaca
+            
+//           start is i + 1 so it starts onto the next char
+            start = i + 1;
+        }
+    }
+    
+    return result;
+}
